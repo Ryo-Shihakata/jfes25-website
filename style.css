@@ -1,0 +1,264 @@
+@charset "UTF-8";
+
+/* 基本設定 */
+body {
+    font-family: 'Helvetica Neue', 'Arial', 'Hiragino Sans', 'Meiryo', sans-serif;
+    line-height: 1.8;
+    color: #333;
+    background-color: #fdfdfd;
+}
+
+a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #007bff;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* ヘッダー */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    z-index: 100;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+}
+
+header h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+header nav ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+header nav li {
+    margin-left: 30px;
+}
+
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 110;
+}
+
+.hamburger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #333;
+    margin: 5px 0;
+    transition: all 0.3s;
+}
+
+/* メインコンテンツ */
+main {
+    padding-top: 70px;
+}
+
+section {
+    padding: 80px 0;
+}
+
+h2 {
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+/* ヒーローセクション */
+#hero {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://source.unsplash.com/random/1600x900/?school-festival');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    text-align: center;
+    padding: 150px 0;
+}
+
+#hero h2 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: white;
+}
+
+#hero p {
+    font-size: 20px;
+}
+
+/* お知らせ */
+.news-list {
+    list-style: none;
+    padding: 0;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.news-list li {
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+    display: flex;
+    align-items: center;
+}
+
+.news-list time {
+    margin-right: 20px;
+    font-weight: bold;
+    color: #777;
+}
+
+/* コンセプト */
+.concept-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.concept-content h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* 企画紹介 */
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.event-item {
+    border: 1px solid #eee;
+    padding: 30px;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.event-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.event-item h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #007bff;
+}
+
+/* アクセス */
+.access-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.map {
+    margin-top: 30px;
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+}
+
+.map iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* フッター */
+footer {
+    background-color: #333;
+    color: white;
+    padding: 30px 0;
+    text-align: center;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    header nav {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(255, 255, 255, 0.98);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    header nav.active {
+        display: flex;
+    }
+
+    header nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    header nav li {
+        margin: 20px 0;
+        margin-left: 0;
+    }
+
+    header nav a {
+        font-size: 20px;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .hamburger.active span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    h2 {
+        font-size: 28px;
+    }
+
+    #hero h2 {
+        font-size: 36px;
+    }
+}
