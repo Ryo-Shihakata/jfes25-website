@@ -1,0 +1,18 @@
+# Dependencies
+/node_modules
+
+# Runtime data
+/db.json
+
+# Environment variables
+.env
+public/.env
+
+# Build output
+/dist
+/build
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

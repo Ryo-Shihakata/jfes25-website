@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お知らせ詳細 - JFES25</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .news-detail-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 8px;
+        }
+        .news-detail-header {
+            border-bottom: 2px solid #eee;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+        }
+        .news-detail-header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .news-detail-meta {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .news-detail-meta .news-category {
+            margin-left: 1rem;
+        }
+        .news-detail-content {
+            line-height: 1.8;
+            white-space: pre-wrap; /* To respect newlines from textarea */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="/index.html">JFES25</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="/index.html">Top</a></li>
+                    <li><a href="/pages/theme.html">Theme&Logo</a></li>
+                    <li><a href="/pages/event.html">Event</a></li>
+                    <li><a href="/pages/news.html">News</a></li>
+                    <li><a href="/pages/timetable.html">TimeTable</a></li>
+                    <li><a href="/pages/map.html">Map</a></li>
+                </ul>
+            </nav>
+            <button class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <div id="news-detail-container" class="container news-detail-container">
+            <!-- Content will be loaded by JavaScript -->
+            <p>読み込み中...</p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 JFES25実行委員会</p>
+        </div>
+    </footer>
+
+    <script src="/js/news-detail.js"></script>
+    <script src="/js/script.js"></script> <!-- For hamburger menu -->
+</body>
+</html>

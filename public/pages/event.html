@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event - JFES25</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="../index.html">JFES25</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">Top</a></li>
+                    <li><a href="theme.html">Theme&Logo</a></li>
+                    <li><a href="event.html">Event</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="timetable.html">TimeTable</a></li>
+                    <li><a href="map.html">Map</a></li>
+                    <li><a href="../index.html#access">Access</a></li>
+                </ul>
+            </nav>
+            <button class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <section id="event" class="container">
+            <h2>Event</h2>
+            <div id="event-filter-buttons" class="filter-buttons">
+                <!-- フィルターボタンはJSで生成 -->
+            </div>
+            <div id="event-list">
+                <!-- イベント内容はJSで生成 -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div id="access" class="container">
+             <h2>Access</h2>
+             <div class="access-links">
+                <a href="https://www.instagram.com/your_school_insta" target="_blank">学校Instagram</a>
+                <a href="https://www.instagram.com/student_council_insta" target="_blank">生徒会Instagram</a>
+                <a href="https://www.youtube.com/yourschoolchannel" target="_blank">学校公式YouTube</a>
+                <a href="https://www.your-school.ed.jp" target="_blank">学校公式サイト</a>
+             </div>
+        </div>
+        <div class="container">
+            <p>&copy; 2025 JFES25実行委員会</p>
+        </div>
+    </footer>
+
+    <!-- Event Modal -->
+    <div id="event-modal-overlay" class="modal-overlay">
+        <div id="event-modal-content" class="modal-content">
+            <button id="event-modal-close" class="modal-close-btn">&times;</button>
+            <div id="event-modal-body">
+                <!-- Event details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+</body>
+</html>
