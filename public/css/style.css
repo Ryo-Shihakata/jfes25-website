@@ -321,31 +321,134 @@ h2 {
     margin-left: 10px;
 }
 
-/* TimeTable */
-.timetable-container {
+/* New Timetable Styles */
+.timetable-controls {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.timetable-day-btn {
+    background: #eee;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin: 0 5px;
+    border-radius: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+.timetable-day-btn.active {
+    background: #007bff;
+    color: white;
+}
+.timetable-wrapper {
+    display: none;
+    overflow-x: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+.timetable-wrapper.active {
+    display: block;
+}
+.timetable-header {
     display: flex;
-    justify-content: space-around;
-    gap: 40px;
-    max-width: 900px;
-    margin: 0 auto;
+    position: sticky;
+    top: 70px; /* Header height */
+    background-color: white;
+    z-index: 2;
 }
-.timetable-day {
-    width: 45%;
+.timetable-header > div {
+    padding: 10px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    background-color: #f8f9fa;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
 }
-.timetable-day h3 {
-    font-size: 22px;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+.timetable-header > div:first-child {
+    width: 80px;
+    border-right: 1px solid #ddd;
 }
-.timetable-day ul {
-    list-style: none;
-    padding: 0;
+.timetable-header > div:not(:first-child) {
+    width: 200px;
+    border-left: 1px solid #eee;
 }
-.timetable-day li {
-    padding: 10px 0;
-    border-bottom: 1px dashed #ccc;
+
+.timetable-body {
+    display: flex;
+    position: relative;
 }
+
+.time-axis {
+    width: 80px;
+    flex-shrink: 0;
+    border-right: 1px solid #ddd;
+    background-color: #fdfdfd;
+}
+.time-axis .time-label {
+    height: 60px; /* Corresponds to 30min slot * 2 */
+    padding: 5px;
+    text-align: right;
+    font-weight: bold;
+    color: #555;
+    font-size: 14px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #eee;
+}
+.time-axis .time-label:last-child {
+    border-bottom: none;
+}
+
+.location-column {
+    width: 200px;
+    flex-shrink: 0;
+    position: relative;
+    border-left: 1px solid #eee;
+}
+.location-column .time-slot-line {
+    height: 60px;
+    border-bottom: 1px dashed #eee;
+    box-sizing: border-box;
+}
+.location-column .time-slot-line:last-child {
+    border-bottom: none;
+}
+
+.timetable-event {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    background-color: rgba(0, 123, 255, 0.85);
+    color: white;
+    border-radius: 4px;
+    padding: 5px;
+    font-size: 13px;
+    overflow: hidden;
+    box-sizing: border-box;
+    z-index: 1;
+    border: 1px solid rgba(0, 86, 179, 0.9);
+    transition: background-color 0.2s, transform 0.2s;
+}
+.timetable-event:hover {
+    background-color: rgba(0, 86, 179, 1);
+    transform: scale(1.02);
+    z-index: 2;
+}
+.timetable-event strong {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+.timetable-event span {
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+    .timetable-header > div:not(:first-child), .location-column {
+        width: 150px;
+    }
+}
+
 
 /* Map */
 .map-selector {
@@ -467,4 +570,105 @@ footer p {
     .timetable-day {
         width: 90%;
     }
+}
+
+/* Timetable Styles */
+.timetable-controls {
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+.timetable-day-btn {
+    padding: 0.5rem 1.5rem;
+    margin: 0 0.5rem;
+    border: 1px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+.timetable-day-btn.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+.timetable-grid {
+    display: none;
+    position: relative;
+    overflow-x: auto;
+}
+.timetable-grid.active {
+    display: block;
+}
+.grid-container, .events-overlay {
+    display: grid;
+    grid-template-columns: 60px repeat(var(--locations, 1), 1fr);
+    grid-template-rows: auto repeat(var(--timeslots, 1), 30px);
+    min-width: calc(150px * var(--locations, 1) + 60px);
+}
+
+.timetable-header {
+    display: contents;
+}
+.timetable-header > div {
+    background-color: #f2f2f2;
+    padding: 0.75rem;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #ddd;
+    position: sticky;
+    top: 70px; /* Adjust based on header height */
+    z-index: 10;
+}
+.timetable-body {
+    display: contents;
+}
+.time-axis {
+    grid-column: 1;
+    display: contents;
+}
+.time-axis > div {
+    grid-column: 1;
+    padding: 0.5rem;
+    text-align: right;
+    font-size: 0.9rem;
+    border: 1px solid #ddd;
+    height: 30px; /* Half-hour slots */
+    box-sizing: border-box;
+    background: #f9f9f9;
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden; /* Hide overflow */
+}
+.location-column {
+    display: contents;
+}
+.time-slot {
+    border: 1px solid #eee;
+    height: 30px; /* Match time-axis height */
+    box-sizing: border-box;
+}
+
+.events-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.timetable-event {
+    grid-column: var(--col);
+    grid-row: var(--row-start) / span var(--row-span);
+    background-color: rgba(0, 123, 255, 0.8);
+    color: white;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    margin: 2px;
+    overflow: hidden;
+    font-size: 0.8rem;
+    pointer-events: auto;
+    z-index: 1;
+}
+.timetable-event strong {
+    display: block;
 }

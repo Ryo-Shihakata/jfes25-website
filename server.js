@@ -29,7 +29,10 @@ app.use(express.static('public'));
 const readDb = async () => {
     try {
         const data = await fs.readFile(DB_PATH, 'utf-8');
-        return JSON.parse(data);
+        const db = JSON.parse(data);
+        if (!db.news) db.news = [];
+        if (!db.events) db.events = [];
+        return db;
     } catch (error) {
         return { news: [], events: [] };
     }
@@ -143,6 +146,61 @@ app.delete('/api/events/:id', async (req, res) => {
 // --- Admin Page ---
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
+// --- Timetable API Endpoints ---
+app.get('/api/timetable', async (req, res) => {
+    const db = await readDb();
+    res.json(db.timetable || []);
+});
+
+app.post('/api/timetable', async (req, res) => {
+    const { title, location, day, startTime, endTime } = req.body;
+    if (!title || !location || !day || !startTime || !endTime) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+    const db = await readDb();
+    if (!db.timetable) db.timetable = [];
+    const newEntry = {
+        id: Date.now().toString(),
+        title,
+        location,
+        day,
+        startTime,
+        endTime,
+    };
+    db.timetable.push(newEntry);
+    await writeDb(db);
+    res.status(201).json(newEntry);
+});
+
+app.put('/api/timetable/:id', async (req, res) => {
+    const { id } = req.params;
+    const { title, location, day, startTime, endTime } = req.body;
+    if (!title || !location || !day || !startTime || !endTime) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+    const db = await readDb();
+    const index = db.timetable.findIndex(item => item.id === id);
+    if (index === -1) {
+        return res.status(404).json({ message: 'Timetable entry not found.' });
+    }
+    const updatedEntry = { ...db.timetable[index], title, location, day, startTime, endTime };
+    db.timetable[index] = updatedEntry;
+    await writeDb(db);
+    res.status(200).json(updatedEntry);
+});
+
+app.delete('/api/timetable/:id', async (req, res) => {
+    const { id } = req.params;
+    const db = await readDb();
+    const initialLength = db.timetable.length;
+    db.timetable = db.timetable.filter(item => item.id !== id);
+    if (db.timetable.length === initialLength) {
+        return res.status(404).json({ message: 'Timetable entry not found.' });
+    }
+    await writeDb(db);
+    res.status(200).json({ message: 'Timetable entry deleted successfully.' });
 });
 
 
