@@ -8,6 +8,30 @@ const app = express();
 const PORT = 3000;
 const DB_PATH = path.join(__dirname, 'db.json');
 
+// --- Basic Auth Middleware ---
+const basicAuth = (req, res, next) => {
+    // Set your username and password here
+    // For production, use environment variables
+    const USER = 'admin';
+    const PASS = 'jfes25';
+
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        res.setHeader('WWW-Authenticate', 'Basic realm="Restricted Area"');
+        return res.status(401).send('Authentication required.');
+    }
+
+    const [username, password] = Buffer.from(authHeader.split(' ')[1], 'base64').toString().split(':');
+
+    if (username === USER && password === PASS) {
+        return next();
+    }
+
+    res.setHeader('WWW-Authenticate', 'Basic realm="Restricted Area"');
+    return res.status(401).send('Authentication failed.');
+};
+
+
 // --- Multer Setup for Image Uploads ---
 const storage = multer.diskStorage({
     destination: './public/uploads/',
@@ -43,7 +67,7 @@ const writeDb = async (data) => {
 };
 
 
-// --- News API Endpoints ---
+// --- Public API Endpoints (No Auth Required) ---
 app.get('/api/news', async (req, res) => {
     const db = await readDb();
     const sortedNews = db.news.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -57,7 +81,35 @@ app.get('/api/news/:id', async (req, res) => {
     else res.status(404).json({ message: 'News item not found' });
 });
 
-app.post('/api/news', async (req, res) => {
+app.get('/api/events', async (req, res) => {
+    const db = await readDb();
+    res.json(db.events);
+});
+
+app.get('/api/events/:id', async (req, res) => {
+    const db = await readDb();
+    const eventItem = db.events.find(item => item.id === req.params.id);
+    if (eventItem) res.json(eventItem);
+    else res.status(404).json({ message: 'Event not found' });
+});
+
+app.get('/api/timetable', async (req, res) => {
+    const db = await readDb();
+    res.json(db.timetable || []);
+});
+
+
+// --- Admin Routes (Auth Required) ---
+const adminRouter = express.Router();
+adminRouter.use(basicAuth);
+
+// Serve admin.html
+adminRouter.get('/admin.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
+// News API - Admin
+adminRouter.post('/api/news', async (req, res) => {
     const { title, category, content } = req.body;
     if (!title || !content) {
         return res.status(400).json({ message: 'Title and content are required.' });
@@ -75,7 +127,7 @@ app.post('/api/news', async (req, res) => {
     res.status(201).json(newNews);
 });
 
-app.delete('/api/news/:id', async (req, res) => {
+adminRouter.delete('/api/news/:id', async (req, res) => {
     const { id } = req.params;
     const db = await readDb();
     const initialLength = db.news.length;
@@ -87,21 +139,8 @@ app.delete('/api/news/:id', async (req, res) => {
     res.status(200).json({ message: 'News item deleted successfully.' });
 });
 
-
-// --- Event API Endpoints ---
-app.get('/api/events', async (req, res) => {
-    const db = await readDb();
-    res.json(db.events);
-});
-
-app.get('/api/events/:id', async (req, res) => {
-    const db = await readDb();
-    const eventItem = db.events.find(item => item.id === req.params.id);
-    if (eventItem) res.json(eventItem);
-    else res.status(404).json({ message: 'Event not found' });
-});
-
-app.post('/api/events', upload.single('image'), async (req, res) => {
+// Event API - Admin
+adminRouter.post('/api/events', upload.single('image'), async (req, res) => {
     const { title, category, location, description } = req.body;
     if (!title || !description) {
         return res.status(400).json({ message: 'Title and description are required.' });
@@ -120,7 +159,7 @@ app.post('/api/events', upload.single('image'), async (req, res) => {
     res.status(201).json(newEvent);
 });
 
-app.delete('/api/events/:id', async (req, res) => {
+adminRouter.delete('/api/events/:id', async (req, res) => {
     const { id } = req.params;
     const db = await readDb();
     const eventToDelete = db.events.find(item => item.id === id);
@@ -142,19 +181,8 @@ app.delete('/api/events/:id', async (req, res) => {
     res.status(200).json({ message: 'Event deleted successfully.' });
 });
 
-
-// --- Admin Page ---
-app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'admin.html'));
-});
-
-// --- Timetable API Endpoints ---
-app.get('/api/timetable', async (req, res) => {
-    const db = await readDb();
-    res.json(db.timetable || []);
-});
-
-app.post('/api/timetable', async (req, res) => {
+// Timetable API - Admin
+adminRouter.post('/api/timetable', async (req, res) => {
     const { title, location, day, startTime, endTime } = req.body;
     if (!title || !location || !day || !startTime || !endTime) {
         return res.status(400).json({ message: 'All fields are required.' });
@@ -174,7 +202,7 @@ app.post('/api/timetable', async (req, res) => {
     res.status(201).json(newEntry);
 });
 
-app.put('/api/timetable/:id', async (req, res) => {
+adminRouter.put('/api/timetable/:id', async (req, res) => {
     const { id } = req.params;
     const { title, location, day, startTime, endTime } = req.body;
     if (!title || !location || !day || !startTime || !endTime) {
@@ -191,7 +219,7 @@ app.put('/api/timetable/:id', async (req, res) => {
     res.status(200).json(updatedEntry);
 });
 
-app.delete('/api/timetable/:id', async (req, res) => {
+adminRouter.delete('/api/timetable/:id', async (req, res) => {
     const { id } = req.params;
     const db = await readDb();
     const initialLength = db.timetable.length;
@@ -203,9 +231,12 @@ app.delete('/api/timetable/:id', async (req, res) => {
     res.status(200).json({ message: 'Timetable entry deleted successfully.' });
 });
 
+// Use the admin router
+app.use('/', adminRouter);
+
 
 // --- Server Start ---
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
-    console.log(`Admin panel is available at http://localhost:${PORT}/admin`);
+    console.log(`Admin panel is available at http://localhost:${PORT}/admin.html`);
 });
