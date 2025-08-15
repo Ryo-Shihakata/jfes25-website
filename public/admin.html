@@ -142,44 +142,6 @@
                 <!-- イベントがここに表示されます -->
             </ul>
         </section>
-
-        <hr style="margin: 4rem 0;">
-
-        <section id="timetable-management">
-            <h2>タイムテーブルの管理</h2>
-            <form id="add-timetable-form">
-                <div class="form-group">
-                    <label for="timetable-title">企画名</label>
-                    <input type="text" id="timetable-title" name="title" required>
-                </div>
-                <div class="form-group">
-                    <label for="timetable-location">場所</label>
-                    <input type="text" id="timetable-location" name="location" placeholder="例: 体育館ステージ" required>
-                </div>
-                <div class="form-group">
-                    <label for="timetable-day">日付</label>
-                    <select id="timetable-day" name="day" required>
-                        <option value="1">1日目</option>
-                        <option value="2">2日目</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="timetable-startTime">開始時刻</label>
-                    <input type="time" id="timetable-startTime" name="startTime" required>
-                </div>
-                <div class="form-group">
-                    <label for="timetable-endTime">終了時刻</label>
-                    <input type="time" id="timetable-endTime" name="endTime" required>
-                </div>
-                <input type="hidden" id="timetable-id" name="id">
-                <button type="submit" class="btn-submit">タイムテーブルに追加</button>
-            </form>
-
-            <h2 style="margin-top: 3rem;">タイムテーブル一覧</h2>
-            <ul id="timetable-management-list">
-                <!-- タイムテーブル項目がここに表示されます -->
-            </ul>
-        </section>
     </div>
 
     <script src="/js/admin.js"></script>

@@ -93,11 +93,6 @@ app.get('/api/events/:id', async (req, res) => {
     else res.status(404).json({ message: 'Event not found' });
 });
 
-app.get('/api/timetable', async (req, res) => {
-    const db = await readDb();
-    res.json(db.timetable || []);
-});
-
 
 // --- Admin Routes (Auth Required) ---
 const adminRouter = express.Router();
@@ -110,125 +105,96 @@ adminRouter.get('/admin.html', (req, res) => {
 
 // News API - Admin
 adminRouter.post('/api/news', async (req, res) => {
-    const { title, category, content } = req.body;
-    if (!title || !content) {
-        return res.status(400).json({ message: 'Title and content are required.' });
+    try {
+        const { title, category, content } = req.body;
+        if (!title || !content) {
+            return res.status(400).json({ message: 'Title and content are required.' });
+        }
+        const db = await readDb();
+        const newNews = {
+            id: Date.now().toString(),
+            title,
+            category: category || '未分類',
+            content,
+            date: new Date().toISOString(),
+        };
+        db.news.push(newNews);
+        await writeDb(db);
+        res.status(201).json(newNews);
+    } catch (error) {
+        console.error('Error adding news:', error);
+        res.status(500).json({ message: 'お知らせの追加中にサーバーエラーが発生しました。' });
     }
-    const db = await readDb();
-    const newNews = {
-        id: Date.now().toString(),
-        title,
-        category: category || '未分類',
-        content,
-        date: new Date().toISOString(),
-    };
-    db.news.push(newNews);
-    await writeDb(db);
-    res.status(201).json(newNews);
 });
 
 adminRouter.delete('/api/news/:id', async (req, res) => {
-    const { id } = req.params;
-    const db = await readDb();
-    const initialLength = db.news.length;
-    db.news = db.news.filter(item => item.id !== id);
-    if (db.news.length === initialLength) {
-        return res.status(404).json({ message: 'News item not found.' });
+    try {
+        const { id } = req.params;
+        const db = await readDb();
+        const initialLength = db.news.length;
+        db.news = db.news.filter(item => item.id !== id);
+        if (db.news.length === initialLength) {
+            return res.status(404).json({ message: 'News item not found.' });
+        }
+        await writeDb(db);
+        res.status(200).json({ message: 'News item deleted successfully.' });
+    } catch (error) {
+        console.error('Error deleting news:', error);
+        res.status(500).json({ message: 'お知らせの削除中にサーバーエラーが発生しました。' });
     }
-    await writeDb(db);
-    res.status(200).json({ message: 'News item deleted successfully.' });
 });
 
 // Event API - Admin
 adminRouter.post('/api/events', upload.single('image'), async (req, res) => {
-    const { title, category, location, description } = req.body;
-    if (!title || !description) {
-        return res.status(400).json({ message: 'Title and description are required.' });
+    try {
+        const { title, category, location, description } = req.body;
+        if (!title || !description) {
+            return res.status(400).json({ message: 'Title and description are required.' });
+        }
+        const db = await readDb();
+        const newEvent = {
+            id: Date.now().toString(),
+            title,
+            category: category || '未分類',
+            location: location || '未定',
+            description,
+            imageUrl: req.file ? `/uploads/${req.file.filename}` : null
+        };
+        db.events.push(newEvent);
+        await writeDb(db);
+        res.status(201).json(newEvent);
+    } catch (error) {
+        console.error('Error adding event:', error);
+        res.status(500).json({ message: 'イベントの追加中にサーバーエラーが発生しました。' });
     }
-    const db = await readDb();
-    const newEvent = {
-        id: Date.now().toString(),
-        title,
-        category: category || '未分類',
-        location: location || '未定',
-        description,
-        imageUrl: req.file ? `/uploads/${req.file.filename}` : null
-    };
-    db.events.push(newEvent);
-    await writeDb(db);
-    res.status(201).json(newEvent);
 });
 
 adminRouter.delete('/api/events/:id', async (req, res) => {
-    const { id } = req.params;
-    const db = await readDb();
-    const eventToDelete = db.events.find(item => item.id === id);
-    if (!eventToDelete) {
-        return res.status(404).json({ message: 'Event not found.' });
-    }
-
-    // Delete image file if it exists
-    if (eventToDelete.imageUrl) {
-        try {
-            await fs.unlink(path.join(__dirname, 'public', eventToDelete.imageUrl));
-        } catch (err) {
-            console.error("Failed to delete image file:", err);
+    try {
+        const { id } = req.params;
+        const db = await readDb();
+        const eventToDelete = db.events.find(item => item.id === id);
+        if (!eventToDelete) {
+            return res.status(404).json({ message: 'Event not found.' });
         }
-    }
 
-    db.events = db.events.filter(item => item.id !== id);
-    await writeDb(db);
-    res.status(200).json({ message: 'Event deleted successfully.' });
-});
+        // Delete image file if it exists
+        if (eventToDelete.imageUrl) {
+            try {
+                await fs.unlink(path.join(__dirname, 'public', eventToDelete.imageUrl));
+            } catch (err) {
+                console.error("Failed to delete image file:", err);
+                // Continue even if image deletion fails
+            }
+        }
 
-// Timetable API - Admin
-adminRouter.post('/api/timetable', async (req, res) => {
-    const { title, location, day, startTime, endTime } = req.body;
-    if (!title || !location || !day || !startTime || !endTime) {
-        return res.status(400).json({ message: 'All fields are required.' });
+        db.events = db.events.filter(item => item.id !== id);
+        await writeDb(db);
+        res.status(200).json({ message: 'Event deleted successfully.' });
+    } catch (error) {
+        console.error('Error deleting event:', error);
+        res.status(500).json({ message: 'イベントの削除中にサーバーエラーが発生しました。' });
     }
-    const db = await readDb();
-    if (!db.timetable) db.timetable = [];
-    const newEntry = {
-        id: Date.now().toString(),
-        title,
-        location,
-        day,
-        startTime,
-        endTime,
-    };
-    db.timetable.push(newEntry);
-    await writeDb(db);
-    res.status(201).json(newEntry);
-});
-
-adminRouter.put('/api/timetable/:id', async (req, res) => {
-    const { id } = req.params;
-    const { title, location, day, startTime, endTime } = req.body;
-    if (!title || !location || !day || !startTime || !endTime) {
-        return res.status(400).json({ message: 'All fields are required.' });
-    }
-    const db = await readDb();
-    const index = db.timetable.findIndex(item => item.id === id);
-    if (index === -1) {
-        return res.status(404).json({ message: 'Timetable entry not found.' });
-    }
-    const updatedEntry = { ...db.timetable[index], title, location, day, startTime, endTime };
-    db.timetable[index] = updatedEntry;
-    await writeDb(db);
-    res.status(200).json(updatedEntry);
-});
-
-adminRouter.delete('/api/timetable/:id', async (req, res) => {
-    const { id } = req.params;
-    const db = await readDb();
-    const initialLength = db.timetable.length;
-    db.timetable = db.timetable.filter(item => item.id !== id);
-    if (db.timetable.length === initialLength) {
-        return res.status(404).json({ message: 'Timetable entry not found.' });
-    }
-    await writeDb(db);
-    res.status(200).json({ message: 'Timetable entry deleted successfully.' });
 });
 
 // Use the admin router
