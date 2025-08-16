@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map - 令和七年度城東祭「EverLasting」</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="../assets/css/common.css">
+    <link rel="stylesheet" href="../assets/css/pages.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">城東祭</div>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="jyotoexpo.html">JyotoExpo</a></li>
+                <li><a href="map.html" class="active">Map</a></li>
+                <li><a href="timetable.html">Timetable</a></li>
+                <li><a href="information.html">Information</a></li>
+                <li><a href="blog.html">Blog</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">校内マップ</h1>
+            <p class="page-subtitle">各フロアの展示・企画配置図</p>
+        </div>
+
+        <!-- Floor Tabs -->
+        <div class="floor-tabs">
+            <button class="floor-tab active" data-floor="outside">外部</button>
+            <button class="floor-tab" data-floor="2f">2F</button>
+            <button class="floor-tab" data-floor="3f">3F</button>
+            <button class="floor-tab" data-floor="4f">4F</button>
+            <button class="floor-tab" data-floor="5f">5F</button>
+        </div>
+
+        <!-- Map Container -->
+        <div class="map-container">
+            <!-- Outside Floor -->
+            <div id="outside" class="floor-content active">
+                <h2 class="floor-title">外部エリア</h2>
+                <div class="map-display" id="outside-map">
+                    <div class="map-placeholder">
+                        <strong>外部エリアマップ</strong><br>
+                        ※ 画像準備中<br>
+                        体育館、グラウンド、正門周辺の配置図
+                    </div>
+                </div>
+                <div class="floor-info" id="outside-info">
+                    <!-- Dynamic content loaded by JS -->
+                </div>
+            </div>
+
+            <!-- 2F Floor -->
+            <div id="2f" class="floor-content">
+                <h2 class="floor-title">2階フロア</h2>
+                <div class="map-display" id="2f-map">
+                    <div class="map-placeholder">
+                        <strong>2階フロアマップ</strong><br>
+                        ※ 画像準備中<br>
+                        教室・廊下の配置図
+                    </div>
+                </div>
+                <div class="floor-info" id="2f-info">
+                    <!-- Dynamic content loaded by JS -->
+                </div>
+            </div>
+
+            <!-- 3F Floor -->
+            <div id="3f" class="floor-content">
+                <h2 class="floor-title">3階フロア</h2>
+                <div class="map-display" id="3f-map">
+                    <div class="map-placeholder">
+                        <strong>3階フロアマップ</strong><br>
+                        ※ 画像準備中<br>
+                        教室・廊下の配置図
+                    </div>
+                </div>
+                <div class="floor-info" id="3f-info">
+                    <!-- Dynamic content loaded by JS -->
+                </div>
+            </div>
+
+            <!-- 4F Floor -->
+            <div id="4f" class="floor-content">
+                <h2 class="floor-title">4階フロア</h2>
+                <div class="map-display" id="4f-map">
+                    <div class="map-placeholder">
+                        <strong>4階フロアマップ</strong><br>
+                        ※ 画像準備中<br>
+                        教室・廊下の配置図
+                    </div>
+                </div>
+                <div class="floor-info" id="4f-info">
+                    <!-- Dynamic content loaded by JS -->
+                </div>
+            </div>
+
+            <!-- 5F Floor -->
+            <div id="5f" class="floor-content">
+                <h2 class="floor-title">5階フロア</h2>
+                <div class="map-display" id="5f-map">
+                    <div class="map-placeholder">
+                        <strong>5階フロアマップ</strong><br>
+                        ※ 画像準備中<br>
+                        教室・廊下の配置図
+                    </div>
+                </div>
+                <div class="floor-info" id="5f-info">
+                    <!-- Dynamic content loaded by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="map-legend">
+            <h3 class="legend-title">マップ凡例</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #ff6b6b;"></div>
+                    <span class="legend-label">展示企画</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #4ecdc4;"></div>
+                    <span class="legend-label">模擬店</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #45b7d1;"></div>
+                    <span class="legend-label">体験企画</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f9ca24;"></div>
+                    <span class="legend-label">ステージ</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #6c5ce7;"></div>
+                    <span class="legend-label">休憩・飲食スペース</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #a0aec0;"></div>
+                    <span class="legend-label">設備・サービス</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #9bd367;"></div>
+                    <span class="legend-label">トイレ</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="floor-navigation">
+            <a href="jyotoexpo.html" class="btn btn-secondary">← 展示一覧</a>
+            <a href="timetable.html" class="btn">タイムテーブル →</a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="#">Instagram</a>
+                <a href="#">Twitter</a>
+                <a href="#">YouTube</a>
+                <a href="#">Facebook</a>
+            </div>
+            <p>&copy; 2025 東大寺学園 第61回菁々祭「分秒」実行委員会</p>
+            <p>〒631-0803 奈良市山陵町1375</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="../assets/js/common.js"></script>
+    <script src="../assets/js/map.js"></script>
+</body>
+</html>
